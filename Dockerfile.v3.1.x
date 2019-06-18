@@ -1,5 +1,5 @@
-FROM ubuntu:18.04
-MAINTAINER Matt Bentley <mbentley@mbentley.net>
+FROM phusion/baseimage:0.11
+MAINTAINER Josef Eisl <zapster@zapster.cc>
 
 # install runtime dependencies
 RUN apt-get update &&\
@@ -33,8 +33,19 @@ RUN cd /tmp &&\
   mkdir /opt/tplink/EAPController/logs /opt/tplink/EAPController/work &&\
   chown -R omada:omada /opt/tplink/EAPController/data /opt/tplink/EAPController/logs /opt/tplink/EAPController/work
 
-USER omada
+RUN mkdir -p /data/db && chown omada:omada /data/db &&\
+  mkdir -p /etc/my_init.d
+
+RUN apt-get update &&\
+  apt-get install -y jsvc &&\
+  rm -rf /var/lib/apt/lists/*
+
+#ADD ./13_mongod.sh /etc/my_init.d
+ADD ./15_run-omada-controller.sh /etc/my_init.d
+
+#USER omada
 WORKDIR /opt/tplink/EAPController
 EXPOSE 8088 8043
 VOLUME ["/opt/tplink/EAPController/data","/opt/tplink/EAPController/work","/opt/tplink/EAPController/logs"]
-CMD ["/opt/tplink/EAPController/jre/bin/java","-server","-Xms128m","-Xmx1024m","-XX:MaxHeapFreeRatio=60","-XX:MinHeapFreeRatio=30","-XX:+HeapDumpOnOutOfMemoryError","-XX:-UsePerfData","-Deap.home=/opt/tplink/EAPController","-cp","/opt/tplink/EAPController/lib/*:","com.tp_link.eap.start.EapLinuxMain"]
+#CMD ["/opt/tplink/EAPController/jre/bin/java","-server","-Xms128m","-Xmx1024m","-XX:MaxHeapFreeRatio=60","-XX:MinHeapFreeRatio=30","-XX:+HeapDumpOnOutOfMemoryError","-XX:-UsePerfData","-Deap.home=/opt/tplink/EAPController","-cp","/opt/tplink/EAPController/lib/*:","com.tp_link.eap.start.EapLinuxMain"]
+CMD ["/sbin/my_init"]

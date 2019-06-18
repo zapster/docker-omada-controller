@@ -1,0 +1,14 @@
+version: '3'
+services:
+  omada-controller:
+    build: .
+    network_mode: host
+    #volumes:
+    #  - ./omada-data:/opt/tplink/EAPController/data
+    #  - ./omada-work:/opt/tplink/EAPController/work
+    #  - ./omada-logs:/opt/tplink/EAPController/logs
+    ports:
+      - "8088:8088"
+      - "8043:8043"
+    #restart: unless-stopped
+    privileged: true
