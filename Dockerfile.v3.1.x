@@ -45,8 +45,8 @@ RUN rm -rf /opt/tplink/EAPController/bin/mongod &&\
 
 ADD ./15_run-omada-controller.sh /opt/tplink/EAPController/start.sh
 
-#USER omada
+USER omada
 WORKDIR /opt/tplink/EAPController
 EXPOSE 8088 8043
 VOLUME ["/opt/tplink/EAPController/data","/opt/tplink/EAPController/work","/opt/tplink/EAPController/logs"]
-CMD ["bash", "-c", "/opt/tplink/EAPController/start.sh"]
+CMD ["/bin/bash", "-c", "/opt/tplink/EAPController/start.sh"]
