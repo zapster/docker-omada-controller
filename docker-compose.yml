@@ -2,13 +2,20 @@ version: '3'
 services:
   omada-controller:
     build: .
-    network_mode: host
+    #network_mode: host
     volumes:
       - /opt/tplink/EAPController/data
       - /opt/tplink/EAPController/work
       - /opt/tplink/EAPController/logs
     ports:
-      - "8088:8088"
-      - "8043:8043"
+      - "8043:8043"   #  (TCP) for https
+      - "8088:8088"   #  (TCP) for http
+      - "27001:27001/udp" #  (UDP) for controller discovery
+      - "27002:27002" #  (TCP) for controller searching
+      - "27017:27017" #  (TCP) for mongo DB server
+      - "29810:29810/udp" #  (UDP) for EAP discovery
+      - "29811:29811" #  (TCP) for EAP management
+      - "29812:29812" #  (TCP) for EAP adoption
+      - "29813:29813" #  (TCP) for EAP upgrading.
     restart: "always"
-    privileged: true
+    #privileged: true
